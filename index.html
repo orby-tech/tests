@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My first Vue app</title>
+  <script src="https://unpkg.com/vue"></script>
+  <style type="text/css">
+    .display {
+      display: none;
+    }
+    .finded {
+      background-color: yellow;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <template v-if="!login">
+      {{ message[0] }}
+      <input type="text" name="login" id="login-form__username"/>
+      {{ message[1] }}
+      <input type="text" name="lassword" id="login-form__password"/>
+      <button @click="loginButton">login</button>
+    </template>
+
+
+    <template v-else="login">
+      <h2>table</h2>
+      <button @click="logoutButton">logout</button>
+      <input type="text" id="findInput">
+      <button @click="findButton">Find</button>
+      <table>
+        <tr v-for="(user, index) in contacts" :key="user.contacts">
+          <td v-bind:class="{finded: user.user.indexOf(find) != -1}">{{user.user}}</td>
+          <td v-bind:class="{finded: user.contact.indexOf(find) != -1}">{{user.contact}}</td>
+          <td><button @click="contacts.splice(index,1)">delete</button></td>
+          <td><button @click="user.show = !user.show">update</button></td>
+          <td v-bind:class="{display: !user.show}">
+            User:
+            <input v-bind:id='index+user.contact'>
+            Contact:
+            <input v-bind:id='user.contact+index'>
+            <button @click="removeButton(user, index)"> Remove </button>
+          </td>
+        </tr>
+      </table>
+    </template>
+      
+    </div>
+  </div>
+
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        message: ["Your login", "Your Password"],
+        login: true,
+        contacts: [
+          {user: "pupkin", contact: "8800", show: false},
+          {user: "tutkin", contact: "8 800 555 35 35", show: false},
+          {user: "kruglov", contact: "3,141592653589793238462643", show: false},
+          {user: "kvadratov", contact: "14916253649", show: false}
+        ],
+        find: null
+      },
+
+    methods: {
+      loginButton () {
+        if (document.getElementById('login-form__username').value.length >= 1
+          && document.getElementById('login-form__username').value.split(" ").length === 1 
+          && document.getElementById('login-form__password').value.length >= 1 
+          && document.getElementById('login-form__password').value.split(" ").length === 1){
+          app.login = true
+
+        } else {
+          alert("re-check your forms")
+        }
+      },
+      logoutButton () {
+        app.login = false
+      },
+      removeButton(user, index){   
+        if (document.getElementById(index + user.contact).value !== ""){
+          user.user = document.getElementById(index + user.contact).value
+        }
+        if (document.getElementById(user.contact+index).value !== ""){
+          user.contact = document.getElementById(user.contact+index).value
+        }
+      },
+      findButton(){
+        app.find = document.getElementById('findInput').value
+      }
+    }
+    })
+  </script>
+</body>
+</html>
